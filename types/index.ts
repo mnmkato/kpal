@@ -1,19 +1,14 @@
 export type Category = 'Vegetables' | 'Fruits' | 'Spices' | 'Food' | 'Other';
-export type Unit = 'kg' | 'g' | 'L' | 'ml' | 'pcs' | 'bunch' | 'pack';
 
 export interface GroceryItem {
   id: string;
   name: string;
   category: Category;
   available: boolean;
-  quantity?: number;
-  unit?: Unit;
 }
 
 export interface RecipeIngredient {
   name: string;
-  quantity?: number;
-  unit?: Unit;
 }
 
 export interface Recipe {
@@ -55,8 +50,6 @@ export interface ShoppingItem {
   neededFor: string[];
   purchased: boolean;
   category: Category;
-  totalQuantity?: number;
-  unit?: Unit;
 }
 
 export interface CookingHistory {

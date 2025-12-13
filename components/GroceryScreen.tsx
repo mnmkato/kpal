@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { ChevronDown, Plus, Check, X } from 'lucide-react';
-import { GroceryItem, Category, Unit } from '@/types';
-import { categories, units } from '@/data/initialData';
+import { GroceryItem, Category } from '@/types';
+import { categories } from '@/data/initialData';
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -24,8 +24,7 @@ import {
 interface GroceryScreenProps {
   groceries: GroceryItem[];
   onToggle: (id: string) => void;
-  onAdd: (name: string, category: Category, quantity?: number, unit?: Unit) => void;
-  onUpdateQuantity: (id: string, quantity: number, unit: Unit) => void;
+  onAdd: (name: string, category: Category) => void;
 }
 
 const categoryColors: Record<Category, string> = {
@@ -44,7 +43,7 @@ const categoryIcons: Record<Category, string> = {
   Other: '📦',
 };
 
-export const GroceryScreen = ({ groceries, onToggle, onAdd, onUpdateQuantity }: GroceryScreenProps) => {
+export const GroceryScreen = ({ groceries, onToggle, onAdd }: GroceryScreenProps) => {
   const [openCategories, setOpenCategories] = useState<Set<Category>>(new Set(categories));
   const [isAdding, setIsAdding] = useState(false);
   const [newName, setNewName] = useState('');

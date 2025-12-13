@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { AppState, GroceryItem, Recipe, MealPlan, RecipeWithStatus, ShoppingItem, DayOfWeek, MealType, Category, Unit, CookingHistory, Analytics } from '@/types';
+import { AppState, GroceryItem, Recipe, MealPlan, RecipeWithStatus, ShoppingItem, DayOfWeek, MealType, Category, CookingHistory, Analytics } from '@/types';
 import { initialGroceries, initialRecipes, initialMealPlan, initialCookingHistory, daysOfWeek, mealTypes } from '@/data/initialData';
 
 const STORAGE_KEY = 'kitchen-planner-state';
@@ -50,29 +50,17 @@ export const useAppState = () => {
     }));
   }, []);
 
-  // Add new grocery with quantity
-  const addGrocery = useCallback((name: string, category: Category, quantity?: number, unit?: Unit) => {
+  // Add new grocery
+  const addGrocery = useCallback((name: string, category: Category) => {
     const newGrocery: GroceryItem = {
       id: `g-${Date.now()}`,
       name,
       category,
       available: false,
-      quantity,
-      unit,
     };
     setState(prev => ({
       ...prev,
       groceries: [...prev.groceries, newGrocery],
-    }));
-  }, []);
-
-  // Update grocery quantity
-  const updateGroceryQuantity = useCallback((id: string, quantity: number, unit: Unit) => {
-    setState(prev => ({
-      ...prev,
-      groceries: prev.groceries.map(g =>
-        g.id === id ? { ...g, quantity, unit } : g
-      ),
     }));
   }, []);
 
@@ -253,7 +241,6 @@ export const useAppState = () => {
         neededFor: Array.from(recipes),
         purchased: false,
         category: grocery?.category || 'Other',
-        unit: grocery?.unit,
       };
     });
   }, [state.mealPlan, state.recipes, state.groceries]);
@@ -363,7 +350,6 @@ export const useAppState = () => {
     analytics,
     toggleGrocery,
     addGrocery,
-    updateGroceryQuantity,
     setMeal,
     clearMeal,
     clearMealPlan,

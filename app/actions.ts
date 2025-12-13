@@ -9,13 +9,11 @@ export async function getGroceries() {
     return await prisma.groceryItem.findMany();
 }
 
-export async function addGrocery(name: string, category: string, quantity?: number, unit?: string) {
+export async function addGrocery(name: string, category: string) {
     await prisma.groceryItem.create({
         data: {
             name,
             category,
-            quantity,
-            unit,
             available: false,
         },
     });
@@ -33,13 +31,6 @@ export async function toggleGrocery(id: string) {
     }
 }
 
-export async function updateGroceryQuantity(id: string, quantity: number, unit: string) {
-    await prisma.groceryItem.update({
-        where: { id },
-        data: { quantity, unit },
-    });
-    revalidatePath('/groceries');
-}
 
 // Recipes
 export async function getRecipes() {

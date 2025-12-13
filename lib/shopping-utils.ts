@@ -32,7 +32,6 @@ export function calculateShoppingList(mealPlan: MealPlan, recipes: Recipe[], gro
             neededFor: Array.from(recipes),
             purchased: false,
             category: grocery?.category || 'Other',
-            unit: grocery?.unit,
         };
     });
 }

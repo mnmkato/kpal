@@ -20,8 +20,6 @@ async function main() {
                 name: grocery.name,
                 category: grocery.category,
                 available: grocery.available,
-                quantity: grocery.quantity,
-                unit: grocery.unit,
             },
         });
     }

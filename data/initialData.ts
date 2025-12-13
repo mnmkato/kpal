@@ -2,45 +2,45 @@ import { GroceryItem, Recipe, MealPlan, Category, CookingHistory } from '@/types
 
 export const initialGroceries: GroceryItem[] = [
   // Vegetables
-  { id: 'v1', name: 'Tomatoes', category: 'Vegetables', available: true, quantity: 1, unit: 'kg' },
-  { id: 'v2', name: 'Onions', category: 'Vegetables', available: true, quantity: 2, unit: 'kg' },
-  { id: 'v3', name: 'Garlic', category: 'Vegetables', available: true, quantity: 1, unit: 'bunch' },
+  { id: 'v1', name: 'Tomatoes', category: 'Vegetables', available: true},
+  { id: 'v2', name: 'Onions', category: 'Vegetables', available: true},
+  { id: 'v3', name: 'Garlic', category: 'Vegetables', available: true},
   { id: 'v4', name: 'Bell Peppers', category: 'Vegetables', available: false },
-  { id: 'v5', name: 'Carrots', category: 'Vegetables', available: true, quantity: 500, unit: 'g' },
+  { id: 'v5', name: 'Carrots', category: 'Vegetables', available: true},
   { id: 'v6', name: 'Spinach', category: 'Vegetables', available: false },
-  { id: 'v7', name: 'Potatoes', category: 'Vegetables', available: true, quantity: 2, unit: 'kg' },
+  { id: 'v7', name: 'Potatoes', category: 'Vegetables', available: true},
   { id: 'v8', name: 'Cucumber', category: 'Vegetables', available: false },
   
   // Fruits
-  { id: 'f1', name: 'Bananas', category: 'Fruits', available: true, quantity: 6, unit: 'pcs' },
-  { id: 'f2', name: 'Apples', category: 'Fruits', available: true, quantity: 4, unit: 'pcs' },
+  { id: 'f1', name: 'Bananas', category: 'Fruits', available: true},
+  { id: 'f2', name: 'Apples', category: 'Fruits', available: true},
   { id: 'f3', name: 'Lemons', category: 'Fruits', available: false },
   { id: 'f4', name: 'Oranges', category: 'Fruits', available: false },
   { id: 'f5', name: 'Strawberries', category: 'Fruits', available: false },
   
   // Spices
-  { id: 's1', name: 'Salt', category: 'Spices', available: true, quantity: 1, unit: 'pack' },
-  { id: 's2', name: 'Black Pepper', category: 'Spices', available: true, quantity: 1, unit: 'pack' },
-  { id: 's3', name: 'Cumin', category: 'Spices', available: true, quantity: 50, unit: 'g' },
+  { id: 's1', name: 'Salt', category: 'Spices', available: true },
+  { id: 's2', name: 'Black Pepper', category: 'Spices', available: true },
+  { id: 's3', name: 'Cumin', category: 'Spices', available: true },
   { id: 's4', name: 'Paprika', category: 'Spices', available: false },
-  { id: 's5', name: 'Oregano', category: 'Spices', available: true, quantity: 30, unit: 'g' },
-  { id: 's6', name: 'Cinnamon', category: 'Spices', available: true, quantity: 50, unit: 'g' },
+  { id: 's5', name: 'Oregano', category: 'Spices', available: true },
+  { id: 's6', name: 'Cinnamon', category: 'Spices', available: true },
   
   // Food
-  { id: 'fd1', name: 'Rice', category: 'Food', available: true, quantity: 2, unit: 'kg' },
-  { id: 'fd2', name: 'Pasta', category: 'Food', available: true, quantity: 500, unit: 'g' },
-  { id: 'fd3', name: 'Bread', category: 'Food', available: true, quantity: 1, unit: 'pack' },
-  { id: 'fd4', name: 'Eggs', category: 'Food', available: true, quantity: 12, unit: 'pcs' },
+  { id: 'fd1', name: 'Rice', category: 'Food', available: true },
+  { id: 'fd2', name: 'Pasta', category: 'Food', available: true },
+  { id: 'fd3', name: 'Bread', category: 'Food', available: true },
+  { id: 'fd4', name: 'Eggs', category: 'Food', available: true },
   { id: 'fd5', name: 'Chicken', category: 'Food', available: false },
-  { id: 'fd6', name: 'Cheese', category: 'Food', available: true, quantity: 200, unit: 'g' },
-  { id: 'fd7', name: 'Milk', category: 'Food', available: true, quantity: 1, unit: 'L' },
-  { id: 'fd8', name: 'Butter', category: 'Food', available: true, quantity: 250, unit: 'g' },
-  { id: 'fd9', name: 'Olive Oil', category: 'Food', available: true, quantity: 500, unit: 'ml' },
+  { id: 'fd6', name: 'Cheese', category: 'Food', available: true },
+  { id: 'fd7', name: 'Milk', category: 'Food', available: true },
+  { id: 'fd8', name: 'Butter', category: 'Food', available: true },
+  { id: 'fd9', name: 'Olive Oil', category: 'Food', available: true },
   
   // Other
-  { id: 'o1', name: 'Honey', category: 'Other', available: true, quantity: 350, unit: 'g' },
+  { id: 'o1', name: 'Honey', category: 'Other', available: true },
   { id: 'o2', name: 'Soy Sauce', category: 'Other', available: false },
-  { id: 'o3', name: 'Vinegar', category: 'Other', available: true, quantity: 500, unit: 'ml' },
+  { id: 'o3', name: 'Vinegar', category: 'Other', available: true },
 ];
 
 export const initialRecipes: Recipe[] = [
@@ -135,5 +135,3 @@ export const daysOfWeek: Array<keyof MealPlan> = [
 ];
 
 export const mealTypes: Array<'Breakfast' | 'Lunch' | 'Dinner'> = ['Breakfast', 'Lunch', 'Dinner'];
-
-export const units = ['kg', 'g', 'L', 'ml', 'pcs', 'bunch', 'pack'] as const;
