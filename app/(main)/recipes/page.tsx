@@ -1,4 +1,4 @@
-import { getRecipes, getGroceries, getCookingHistory, addRecipe, updateRecipe, toggleFavorite, markAsCooked, setMeal, deleteRecipe } from '@/app/actions';
+import { getRecipes, getGroceries, getCookingHistory, addRecipe, updateRecipe, toggleFavorite, markAsCooked, setMeal, deleteRecipe } from '@/app/(main)/actions';
 import { RecipeScreen } from '@/components/RecipeScreen';
 import { calculateRecipeStatus, getSmartSuggestions } from '@/lib/recipe-utils';
 import { DayOfWeek, MealType, Recipe } from '@/types';

@@ -1,4 +1,4 @@
-import { getMealPlan, getRecipes, getGroceries, purchaseItem } from '@/app/actions';
+import { getMealPlan, getRecipes, getGroceries, purchaseItem } from '@/app/(main)/actions';
 import { ShoppingScreen } from '@/components/ShoppingScreen';
 import { calculateShoppingList } from '@/lib/shopping-utils';
 import { Category, GroceryItem } from '@/types';

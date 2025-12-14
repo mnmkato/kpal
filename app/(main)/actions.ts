@@ -1,6 +1,6 @@
 'use server'
 
-import prisma from '../lib/prisma';
+import prisma from '../../lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { calculateRecipeStatus } from '@/lib/recipe-utils';
 import { Category, GroceryItem, Recipe, RecipeUpdateInput } from '@/types';
@@ -89,7 +89,7 @@ export async function addRecipe(name: string, ingredients: string[]) {
     revalidatePath('/recipes');
 }
 
-export async function updateRecipe(id: string, updates:  Partial<Omit<Recipe, 'id'>>) {
+export async function updateRecipe(id: string, updates: Partial<Omit<Recipe, 'id'>>) {
     const prismaData: any = { ...updates };
     if (updates.ingredients) {
         prismaData.ingredients = JSON.stringify(updates.ingredients);
@@ -196,20 +196,20 @@ export async function clearMealPlan() {
 export async function purchaseItem(id: string, name: string, category: Category) {
     const item = await prisma.groceryItem.findFirst({ where: { id } });
     await prisma.groceryItem.upsert({
-    where: { id },
-    update: {
-      available: true,
-    },
-    create: {
-      id,
-      name,
-      category,
-      available: true,
-    },
-  });
+        where: { id },
+        update: {
+            available: true,
+        },
+        create: {
+            id,
+            name,
+            category,
+            available: true,
+        },
+    });
 
-  revalidatePath('/shopping');
-  revalidatePath('/groceries');
+    revalidatePath('/shopping');
+    revalidatePath('/groceries');
 }
 
 export async function getCookingHistory() {

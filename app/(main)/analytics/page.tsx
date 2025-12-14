@@ -1,4 +1,4 @@
-import { getRecipes, getGroceries, getCookingHistory } from '@/app/actions';
+import { getRecipes, getGroceries, getCookingHistory } from '@/app/(main)/actions';
 import { AnalyticsScreen } from '@/components/AnalyticsScreen';
 import { calculateRecipeStatus } from '@/lib/recipe-utils';
 import { calculateAnalytics } from '@/lib/analytics-utils';

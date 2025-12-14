@@ -1,4 +1,4 @@
-import { getGroceries, addGrocery, toggleGrocery, getRecipesWithStatus, updateGrocery, deleteGrocery } from '@/app/actions';
+import { getGroceries, addGrocery, toggleGrocery, getRecipesWithStatus, updateGrocery, deleteGrocery } from '@/app/(main)/actions';
 import { GroceryScreen } from '@/components/GroceryScreen';
 import { Category, GroceryItem } from '@/types';
 
