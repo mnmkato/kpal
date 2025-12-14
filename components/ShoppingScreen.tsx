@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, ShoppingBag } from 'lucide-react';
-import { ShoppingItem, Category } from '@/types';
+import { ShoppingItem, Category, GroceryItem } from '@/types';
 import { categories } from '@/data/initialData';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 
 interface ShoppingScreenProps {
   items: ShoppingItem[];
-  onPurchase: (name: string) => void;
+  onPurchase: (id: string, purchase: Partial<Omit<GroceryItem, 'id'>>) => void;
 }
 
 const categoryColors: Record<Category, string> = {
@@ -90,7 +90,7 @@ export const ShoppingScreen = ({ items, onPurchase }: ShoppingScreenProps) => {
                           </div>
                         </div>
                         <Button
-                          onClick={() => onPurchase(item.name)}
+                          onClick={() => onPurchase(item.id, { name: item.name, category: item.category })}
                           size="sm"
                           className="ml-3 bg-success hover:bg-success/90 text-success-foreground shrink-0"
                         >

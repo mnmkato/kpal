@@ -1,7 +1,7 @@
-import { getRecipes, getGroceries, getCookingHistory, addRecipe, toggleFavorite, markAsCooked, setMeal, deleteRecipe } from '@/app/actions';
+import { getRecipes, getGroceries, getCookingHistory, addRecipe, updateRecipe, toggleFavorite, markAsCooked, setMeal, deleteRecipe } from '@/app/actions';
 import { RecipeScreen } from '@/components/RecipeScreen';
 import { calculateRecipeStatus, getSmartSuggestions } from '@/lib/recipe-utils';
-import { DayOfWeek, MealType } from '@/types';
+import { DayOfWeek, MealType, Recipe } from '@/types';
 
 export default async function RecipesPage() {
     const [recipes, groceries, cookingHistory] = await Promise.all([
@@ -39,6 +39,11 @@ export default async function RecipesPage() {
         await deleteRecipe(id);
     }
 
+    async function handleUpdateRecipe(id: string, updates: Partial<Omit<Recipe, 'id'>>) {
+        'use server'
+        await updateRecipe(id, updates);
+    }
+
     return (
         <div className="pb-20 px-4 max-w-lg mx-auto pt-4">
             <RecipeScreen
@@ -51,6 +56,7 @@ export default async function RecipesPage() {
                 onAddRecipe={handleAddRecipe}
                 onToggleFavorite={handleToggleFavorite}
                 onMarkAsCooked={handleMarkAsCooked}
+                onUpdateRecipe={handleUpdateRecipe}
                 onDeleteRecipe={handleDeleteRecipe}
             />
         </div>

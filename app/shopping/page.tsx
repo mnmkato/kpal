@@ -1,6 +1,7 @@
 import { getMealPlan, getRecipes, getGroceries, purchaseItem } from '@/app/actions';
 import { ShoppingScreen } from '@/components/ShoppingScreen';
 import { calculateShoppingList } from '@/lib/shopping-utils';
+import { Category, GroceryItem } from '@/types';
 
 export default async function ShoppingPage() {
     const [mealPlan, recipes, groceries] = await Promise.all([
@@ -11,9 +12,9 @@ export default async function ShoppingPage() {
 
     const shoppingList = calculateShoppingList(mealPlan as any, recipes as any, groceries as any);
 
-    async function handlePurchase(name: string) {
+    async function handlePurchase(id: string, purchase: Partial<Omit<GroceryItem, 'id'>>) {
         'use server'
-        await purchaseItem(name);
+        await purchaseItem(id, purchase.name as string, purchase.category as Category);
     }
 
     return (

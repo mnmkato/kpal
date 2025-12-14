@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, AlertTriangle, XCircle, ChevronRight, Plus, X, Heart, Sparkles, Clock, Trash2 } from 'lucide-react';
-import { RecipeWithStatus, DayOfWeek, MealType, GroceryItem, CookingHistory } from '@/types';
+import { Check, AlertTriangle, XCircle, ChevronRight, Plus, X, Heart, Sparkles, Clock, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { RecipeWithStatus, DayOfWeek, MealType, GroceryItem, CookingHistory, Recipe } from '@/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -33,6 +33,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { daysOfWeek, mealTypes } from '@/data/initialData';
 
 interface RecipeScreenProps {
@@ -45,6 +51,7 @@ interface RecipeScreenProps {
   onAddRecipe: (name: string, ingredients: string[]) => void;
   onToggleFavorite: (recipeId: string) => void;
   onMarkAsCooked: (recipeId: string) => void;
+  onUpdateRecipe: (id: string, updates: Partial<Omit<Recipe, 'id'>>) => void;
   onDeleteRecipe: (recipeId: string) => void;
 }
 
@@ -79,6 +86,7 @@ export const RecipeScreen = ({
   onAddRecipe,
   onToggleFavorite,
   onMarkAsCooked,
+  onUpdateRecipe,
   onDeleteRecipe,
 }: RecipeScreenProps) => {
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStatus | null>(null);
@@ -88,6 +96,13 @@ export const RecipeScreen = ({
   const [newName, setNewName] = useState('');
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('suggestions');
+  // Edit state
+  const [editRecipe, setEditRecipe] = useState<RecipeWithStatus | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editIngredients, setEditIngredients] = useState<string[]>([]);
+
+  // Delete state
+  const [deleteRecipe, setDeleteRecipe] = useState<RecipeWithStatus | null>(null);
 
   const handleAddToMealPlan = () => {
     if (selectedRecipe) {
@@ -109,6 +124,35 @@ export const RecipeScreen = ({
     setSelectedIngredients(prev =>
       prev.includes(name) ? prev.filter(i => i !== name) : [...prev, name]
     );
+  };
+
+  const openEditDialog = (recipe: RecipeWithStatus) => {
+    setEditRecipe(recipe);
+    setEditName(recipe.name);
+    setEditIngredients([...recipe.ingredients]);
+  };
+
+  const handleEditSave = () => {
+    if (editRecipe && editName.trim() && editIngredients.length > 0) {
+      onUpdateRecipe(editRecipe.id, {
+        name: editName.trim(),
+        ingredients: editIngredients,
+      });
+      setEditRecipe(null);
+    }
+  };
+
+  const toggleEditIngredient = (name: string) => {
+    setEditIngredients(prev =>
+      prev.includes(name) ? prev.filter(i => i !== name) : [...prev, name]
+    );
+  };
+
+  const handleDelete = () => {
+    if (deleteRecipe) {
+      onDeleteRecipe(deleteRecipe.id);
+      setDeleteRecipe(null);
+    }
   };
 
   const readyCount = recipes.filter(r => r.status === 'READY').length;
@@ -137,10 +181,32 @@ export const RecipeScreen = ({
                 />
               </button>
             </div>
-            <Badge variant="outline" className={cn('flex items-center gap-1', config.className)}>
-              <StatusIcon className={cn('w-3 h-3', config.iconClass)} />
-              {config.label}
-            </Badge>
+            <div className="flex items-center gap-1">
+              <Badge variant="outline" className={cn('flex items-center gap-1', config.className)}>
+                <StatusIcon className={cn('w-3 h-3', config.iconClass)} />
+                {config.label}
+              </Badge>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-popover">
+                  <DropdownMenuItem onClick={() => openEditDialog(recipe)}>
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setDeleteRecipe(recipe)}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
           {showSuggestion && recipe.status === 'ALMOST' && (
@@ -227,31 +293,6 @@ export const RecipeScreen = ({
                 </DialogContent>
               </Dialog>
             )}
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-destructive"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="bg-card">
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete "{recipe.name}"?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently delete this recipe and remove it from any meal plans.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => onDeleteRecipe(recipe.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
           </div>
         </div>
       </div>
@@ -379,6 +420,76 @@ export const RecipeScreen = ({
           )}
         </TabsContent>
       </Tabs>
+      {/* Edit Recipe Dialog */}
+      <Dialog open={!!editRecipe} onOpenChange={(open) => !open && setEditRecipe(null)}>
+        <DialogContent className="bg-card max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Recipe</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Recipe Name</label>
+              <Input
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                className="bg-background"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">
+                Ingredients ({editIngredients.length} selected)
+              </label>
+              <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 border border-border rounded-lg">
+                {groceries.map(g => (
+                  <Badge
+                    key={g.id}
+                    variant={editIngredients.includes(g.name) ? 'default' : 'outline'}
+                    className={cn(
+                      'cursor-pointer transition-all',
+                      editIngredients.includes(g.name)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'hover:bg-secondary'
+                    )}
+                    onClick={() => toggleEditIngredient(g.name)}
+                  >
+                    {g.name}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setEditRecipe(null)} className="flex-1">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleEditSave}
+                disabled={!editName.trim() || editIngredients.length === 0}
+                className="flex-1"
+              >
+                <Check className="w-4 h-4 mr-1" /> Save
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteRecipe} onOpenChange={(open) => !open && setDeleteRecipe(null)}>
+        <AlertDialogContent className="bg-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Recipe?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteRecipe?.name}"? This will also remove it from your meal plan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Plus, Check, X } from 'lucide-react';
+import { ChevronDown, Plus, Check, X, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { GroceryItem, Category } from '@/types';
 import { categories } from '@/data/initialData';
 import { cn } from '@/lib/utils';
@@ -20,11 +20,37 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface GroceryScreenProps {
   groceries: GroceryItem[];
+  recipes: { name: string; ingredients: string[] }[];
   onToggle: (id: string) => void;
   onAdd: (name: string, category: Category) => void;
+  onUpdate: (id: string, updates: Partial<Omit<GroceryItem, 'id'>>) => void;
+  onDelete: (id: string) => void;
 }
 
 const categoryColors: Record<Category, string> = {
@@ -43,11 +69,18 @@ const categoryIcons: Record<Category, string> = {
   Other: '📦',
 };
 
-export const GroceryScreen = ({ groceries, onToggle, onAdd }: GroceryScreenProps) => {
+export const GroceryScreen = ({ groceries, recipes, onToggle, onAdd, onUpdate, onDelete }: GroceryScreenProps) => {
   const [openCategories, setOpenCategories] = useState<Set<Category>>(new Set(categories));
   const [isAdding, setIsAdding] = useState(false);
   const [newName, setNewName] = useState('');
   const [newCategory, setNewCategory] = useState<Category>('Other');
+  // Edit dialog state
+  const [editItem, setEditItem] = useState<GroceryItem | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editCategory, setEditCategory] = useState<Category>('Other');
+
+  // Delete dialog state
+  const [deleteItem, setDeleteItem] = useState<GroceryItem | null>(null);
 
   const toggleCategory = (category: Category) => {
     setOpenCategories(prev => {
@@ -70,10 +103,39 @@ export const GroceryScreen = ({ groceries, onToggle, onAdd }: GroceryScreenProps
     }
   };
 
+  const openEditDialog = (item: GroceryItem) => {
+    setEditItem(item);
+    setEditName(item.name);
+    setEditCategory(item.category);
+  };
+
+  const handleEditSave = () => {
+    if (editItem && editName.trim()) {
+      onUpdate(editItem.id, {
+        name: editName.trim(),
+        category: editCategory,
+      });
+      setEditItem(null);
+    }
+  };
+
+  const handleDelete = () => {
+    if (deleteItem) {
+      onDelete(deleteItem.id);
+      setDeleteItem(null);
+    }
+  };
+
+  const getRecipesUsingItem = (itemName: string) => {
+    return recipes.filter(r => r.ingredients.includes(itemName)).map(r => r.name);
+  };
+
   const groupedGroceries = categories.reduce((acc, category) => {
     acc[category] = groceries.filter(g => g.category === category);
     return acc;
   }, {} as Record<Category, GroceryItem[]>);
+
+  const recipesUsingDeleteItem = deleteItem ? getRecipesUsingItem(deleteItem.name) : [];
 
   return (
     <div className="pb-4 animate-fade-in">
@@ -189,11 +251,33 @@ export const GroceryScreen = ({ groceries, onToggle, onAdd }: GroceryScreenProps
                       )}>
                         {item.name}
                       </span>
+                      <div>
                       <Switch
                         checked={item.available}
                         onCheckedChange={() => onToggle(item.id)}
                         className="data-[state=checked]:bg-success"
                       />
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-popover">
+                          <DropdownMenuItem onClick={() => openEditDialog(item)}>
+                            <Pencil className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setDeleteItem(item)}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -202,6 +286,82 @@ export const GroceryScreen = ({ groceries, onToggle, onAdd }: GroceryScreenProps
           );
         })}
       </div>
+    {/* Edit Dialog */}
+      <Dialog open={!!editItem} onOpenChange={(open) => !open && setEditItem(null)}>
+        <DialogContent className="bg-card">
+          <DialogHeader>
+            <DialogTitle>Edit Grocery Item</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Name</label>
+              <Input
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="bg-background"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Category</label>
+              <Select value={editCategory} onValueChange={(v) => setEditCategory(v as Category)}>
+                <SelectTrigger className="bg-background">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-popover">
+                  {categories.map(cat => (
+                    <SelectItem key={cat} value={cat}>
+                      {categoryIcons[cat]} {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditItem(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEditSave} disabled={!editName.trim()}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteItem} onOpenChange={(open) => !open && setDeleteItem(null)}>
+        <AlertDialogContent className="bg-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete "{deleteItem?.name}"?</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div>
+                {recipesUsingDeleteItem.length > 0 ? (
+                  <>
+                    <p className="text-warning mb-2">⚠️ This item is used in {recipesUsingDeleteItem.length} recipe(s):</p>
+                    <ul className="list-disc list-inside text-sm mb-2">
+                      {recipesUsingDeleteItem.slice(0, 5).map(name => (
+                        <li key={name}>{name}</li>
+                      ))}
+                      {recipesUsingDeleteItem.length > 5 && (
+                        <li>...and {recipesUsingDeleteItem.length - 5} more</li>
+                      )}
+                    </ul>
+                    <p>Deleting will affect these recipes.</p>
+                  </>
+                ) : (
+                  <p>This action cannot be undone.</p>
+                )}
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div >
   );
 };

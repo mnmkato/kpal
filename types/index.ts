@@ -11,6 +11,14 @@ export interface RecipeIngredient {
   name: string;
 }
 
+export interface RecipeUpdateInput {
+  name?: string;
+  favorite?: boolean;
+  cookCount?: number;
+  lastCooked?: Date | null;
+  ingredients?: string[];
+}
+
 export interface Recipe {
   id: string;
   name: string;

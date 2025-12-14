@@ -3,10 +3,13 @@
 import prisma from '../lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { calculateRecipeStatus } from '@/lib/recipe-utils';
+import { Category, GroceryItem, Recipe, RecipeUpdateInput } from '@/types';
 
 // Groceries
 export async function getGroceries() {
-    return await prisma.groceryItem.findMany();
+    return await prisma.groceryItem.findMany({
+        orderBy: { createdAt: 'desc' }
+    });
 }
 
 export async function addGrocery(name: string, category: string) {
@@ -31,7 +34,42 @@ export async function toggleGrocery(id: string) {
     }
 }
 
+export async function updateGrocery(id: string, name: string, category: string) {
+    const item = await prisma.groceryItem.findUnique({ where: { id } });
+    if (item) {
+        await prisma.groceryItem.update({
+            where: { id },
+            data: { name, category },
+        });
+        revalidatePath('/groceries');
+    }
+}
 
+export async function deleteGrocery(id: string) {
+    await prisma.groceryItem.delete({ where: { id } });
+    revalidatePath('/groceries');
+}
+export async function getRecipesWithStatus() {
+    const recipesFromDb = await getRecipes();
+    const groceriesFromDb = await getGroceries();
+
+    // Normalize types 
+    const recipes: Recipe[] = recipesFromDb.map(r => ({
+        ...r,
+        lastCooked: r.lastCooked?.toISOString(),
+        createdAt: r.createdAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString(),
+    }));
+
+    const groceries: GroceryItem[] = groceriesFromDb.map(g => ({
+        ...g,
+        category: g.category as Category,
+        createdAt: g.createdAt.toISOString(),
+        updatedAt: g.updatedAt.toISOString(),
+    }));
+
+    return calculateRecipeStatus(recipes, groceries);
+}
 // Recipes
 export async function getRecipes() {
     const recipes = await prisma.recipe.findMany();
@@ -51,6 +89,17 @@ export async function addRecipe(name: string, ingredients: string[]) {
     revalidatePath('/recipes');
 }
 
+export async function updateRecipe(id: string, updates:  Partial<Omit<Recipe, 'id'>>) {
+    const prismaData: any = { ...updates };
+    if (updates.ingredients) {
+        prismaData.ingredients = JSON.stringify(updates.ingredients);
+    }
+    await prisma.recipe.update({
+        where: { id },
+        data: prismaData,
+    });
+    revalidatePath('/recipes');
+}
 export async function toggleFavorite(id: string) {
     const recipe = await prisma.recipe.findUnique({ where: { id } });
     if (recipe) {
@@ -144,16 +193,23 @@ export async function clearMealPlan() {
 }
 
 // Shopping List
-export async function purchaseItem(name: string) {
-    const item = await prisma.groceryItem.findFirst({ where: { name } });
-    if (item) {
-        await prisma.groceryItem.update({
-            where: { id: item.id },
-            data: { available: true },
-        });
-        revalidatePath('/shopping');
-        revalidatePath('/groceries');
-    }
+export async function purchaseItem(id: string, name: string, category: Category) {
+    const item = await prisma.groceryItem.findFirst({ where: { id } });
+    await prisma.groceryItem.upsert({
+    where: { id },
+    update: {
+      available: true,
+    },
+    create: {
+      id,
+      name,
+      category,
+      available: true,
+    },
+  });
+
+  revalidatePath('/shopping');
+  revalidatePath('/groceries');
 }
 
 export async function getCookingHistory() {
