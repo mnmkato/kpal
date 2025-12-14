@@ -168,7 +168,7 @@ export const RecipeScreen = ({
         <div className="p-4">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-lg text-foreground">{recipe.name}</h3>
+              <h3 className="font-semibold text-lg text-foreground line-clamp-1">{recipe.name}</h3>
               <button
                 onClick={() => onToggleFavorite(recipe.id)}
                 className="p-1 hover:bg-secondary rounded transition-colors"
