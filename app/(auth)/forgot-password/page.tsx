@@ -8,7 +8,7 @@ export default function ForgotPassword() {
         return await resetPasswordForEmail(email);
     }
     return (
-        <div className="px-4 max-w-lg mx-auto">
+        <div className="mx-auto">
             <ForgotPasswordClient resetPassword={handleResetPassword} />
         </div>
     );

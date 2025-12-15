@@ -7,7 +7,7 @@ export default function UpdatePassword({ params }: { params: Promise<{ code: str
         return await updatePassword(password, code);
     }
     return (
-        <div className="px-4 max-w-lg mx-auto">
+        <div className="mx-auto">
             <UpdatePasswordClient params={params} updatePassword={handleUpdatePassword} />
         </div>
     );

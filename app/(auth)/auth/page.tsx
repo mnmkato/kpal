@@ -15,7 +15,7 @@ export default function Auth() {
         return await signOut();
     }
     return (
-        <div className="px-4 max-w-lg mx-auto">
+        <div className="mx-auto">
              <AuthClient
                 signInWithEmail={handleSignInWithEmail}
                 signUpNewUser={handleSignUpNewUser}
