@@ -1,7 +1,6 @@
 'use server'
 
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 
 export async function signUpNewUser(email: string, password: string) {
     const supabase = await createClient();
@@ -42,6 +41,19 @@ export async function resetPasswordForEmail(email: string) {
     }   
     return { success: true };
 }   
+export async function updatePassword(password: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.updateUser({
+    password,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
+}
 
 export async function signOut() {
     const supabase = await createClient();

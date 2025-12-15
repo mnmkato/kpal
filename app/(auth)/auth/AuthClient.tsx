@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from 'next/navigation';
-interface AuthWrapperProps {
+import Link from 'next/link';
+
+interface AuthClientProps {
   signInWithEmail: (email: string, password: string) => Promise<{ error?: string, success?: boolean }>;
   signUpNewUser: (email: string, password: string) => Promise<{ error?: string, success?: boolean }>;
   signOut: () => void;
 }
 
-export const AuthWrapper = ({ signInWithEmail, signUpNewUser, signOut }: AuthWrapperProps) => {
+export const AuthClient = ({ signInWithEmail, signUpNewUser, signOut }: AuthClientProps) => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -69,6 +71,12 @@ const router = useRouter();
                 required
               />
             </div>
+            <div className="flex justify-end">
+               <Link href="/forgot-password" className="text-blue-400 hover:text-blue-300 text-sm text-right">
+              Forgot Password?
+            </Link>
+            </div>
+           
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
               {isLogin ? 'Login' : 'Sign Up'}

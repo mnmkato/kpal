@@ -1,4 +1,4 @@
-import { AuthWrapper } from "./AuthWrapper";
+import { AuthClient } from "./AuthClient";
 import { signInWithEmail, signOut, signUpNewUser } from "../actions";
 export default function Auth() {
     
@@ -16,7 +16,7 @@ export default function Auth() {
     }
     return (
         <div className="px-4 max-w-lg mx-auto">
-             <AuthWrapper
+             <AuthClient
                 signInWithEmail={handleSignInWithEmail}
                 signUpNewUser={handleSignUpNewUser}
                 signOut={handleSignOut} />
