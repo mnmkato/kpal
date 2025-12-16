@@ -340,12 +340,12 @@ export const RecipeScreen = ({
                   {groceries.map(g => (
                     <Badge
                       key={g.id}
-                      variant={selectedIngredients.includes(g.name) ? 'default' : 'outline'}
+                      variant={selectedIngredients.includes(g.id) ? 'default' : 'outline'}
                       className={cn(
                         'cursor-pointer transition-all',
                         selectedIngredients.includes(g.name)
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-secondary'
+                          ? 'bg-emerald-500 text-primary-foreground'
+                          : 'hover:bg-emerald-500'
                       )}
                       onClick={() => toggleIngredient(g.id)}
                     >
