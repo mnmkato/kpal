@@ -104,6 +104,9 @@ export const RecipeScreen = ({
   // Delete state
   const [deleteRecipe, setDeleteRecipe] = useState<RecipeWithStatus | null>(null);
   
+  //Add to meal plan state
+  const [mealDialogRecipe, setMealDialogRecipe] = useState<RecipeWithStatus | null>(null);
+
   const groceryNameMap = new Map(groceries.map(g => [g.id, g.name]));
 
   const handleAddToMealPlan = () => {
@@ -247,54 +250,14 @@ export const RecipeScreen = ({
 
           <div className="flex gap-2">
             {canAddToMealPlan && (
-              <Dialog>
-                <DialogTrigger asChild>
                   <Button
                     variant="outline"
                     size="sm"
                     className="flex-1"
-                    onClick={() => setSelectedRecipe(recipe)}
+                    onClick={() => setMealDialogRecipe(recipe)}
                   >
                     Add to Plan <ChevronRight className="w-4 h-4 ml-1" />
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-card">
-                  <DialogHeader>
-                    <DialogTitle>Add "{recipe.name}" to Meal Plan</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">Day</label>
-                      <Select value={selectedDay} onValueChange={(v) => setSelectedDay(v as DayOfWeek)}>
-                        <SelectTrigger className="bg-background">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-popover">
-                          {daysOfWeek.map(day => (
-                            <SelectItem key={day} value={day}>{day}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">Meal</label>
-                      <Select value={selectedMeal} onValueChange={(v) => setSelectedMeal(v as MealType)}>
-                        <SelectTrigger className="bg-background">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-popover">
-                          {mealTypes.map(meal => (
-                            <SelectItem key={meal} value={meal}>{meal}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button onClick={handleAddToMealPlan} className="w-full">
-                      <Check className="w-4 h-4 mr-1" /> Confirm
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
             )}
           </div>
         </div>
@@ -493,6 +456,46 @@ export const RecipeScreen = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Add to meal plan dialog */}
+      <Dialog open={!!mealDialogRecipe} onOpenChange={(open) => !open && setMealDialogRecipe(null)}>
+         <DialogContent className="bg-card">
+                  <DialogHeader>
+                    <DialogTitle>Add "{mealDialogRecipe?.name}" to Meal Plan</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Day</label>
+                      <Select value={selectedDay} onValueChange={(v) => setSelectedDay(v as DayOfWeek)}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover">
+                          {daysOfWeek.map(day => (
+                            <SelectItem key={day} value={day}>{day}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Meal</label>
+                      <Select value={selectedMeal} onValueChange={(v) => setSelectedMeal(v as MealType)}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover">
+                          {mealTypes.map(meal => (
+                            <SelectItem key={meal} value={meal}>{meal}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button onClick={handleAddToMealPlan} className="w-full">
+                      <Check className="w-4 h-4 mr-1" /> Confirm
+                    </Button>
+                  </div>
+                </DialogContent>
+      </Dialog>
     </div>
   );
 };
