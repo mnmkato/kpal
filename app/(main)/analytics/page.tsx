@@ -11,7 +11,7 @@ export default async function AnalyticsPage() {
     ]);
 
     const recipesWithStatus = calculateRecipeStatus(recipes as any, groceries as any);
-    const analytics = calculateAnalytics(recipes as any, cookingHistory as any, recipesWithStatus);
+    const analytics = calculateAnalytics(recipes as any, cookingHistory as any, recipesWithStatus, groceries as any);
 
     return (
         <div className="pb-20 px-4 max-w-lg mx-auto pt-4">

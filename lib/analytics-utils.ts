@@ -1,9 +1,10 @@
-import { Recipe, CookingHistory, RecipeWithStatus, Analytics } from '@/types';
+import { Recipe, CookingHistory, RecipeWithStatus, Analytics, GroceryItem } from '@/types';
 
 export function calculateAnalytics(
     recipes: Recipe[],
     cookingHistory: CookingHistory[],
-    recipesWithStatus: RecipeWithStatus[]
+    recipesWithStatus: RecipeWithStatus[],
+    groceries: GroceryItem[]
 ): Analytics {
     // Most cooked recipes
     const mostCookedRecipes = [...recipes]
@@ -19,10 +20,17 @@ export function calculateAnalytics(
             missingCounts.set(ing, (missingCounts.get(ing) || 0) + 1);
         });
     });
+    const groceryNameMap = new Map(
+        groceries.map(g => [g.id, g.name])
+    );
+
     const mostMissingItems = Array.from(missingCounts.entries())
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5)
-        .map(([name, count]) => ({ name, count }));
+        .map(([id, count]) => ({
+            name: groceryNameMap.get(id) ?? 'Unknown',
+            count,
+        }));
 
     return {
         mostCookedRecipes,
