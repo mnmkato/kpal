@@ -344,8 +344,8 @@ export const RecipeScreen = ({
                       className={cn(
                         'cursor-pointer transition-all',
                         selectedIngredients.includes(g.id)
-                          ? 'bg-emerald-500 text-primary-foreground'
-                          : 'hover:bg-emerald-500'
+                          ? 'bg-primary text-primary-foreground'
+                          : 'hover:bg-primary'
                       )}
                       onClick={() => toggleIngredient(g.id)}
                     >
@@ -450,8 +450,8 @@ export const RecipeScreen = ({
                     className={cn(
                       'cursor-pointer transition-all',
                       editIngredients.includes(g.id)
-                        ? 'bg-emerald-500 text-primary-foreground'
-                        : 'hover:bg-emerald-500'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'hover:bg-primary'
                     )}
                     onClick={() => toggleEditIngredient(g.id)}
                   >
