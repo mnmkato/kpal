@@ -26,6 +26,7 @@ export type AggregateCookingHistory = {
 
 export type CookingHistoryMinAggregateOutputType = {
   id: string | null
+  userId: string | null
   recipeId: string | null
   recipeName: string | null
   date: Date | null
@@ -33,6 +34,7 @@ export type CookingHistoryMinAggregateOutputType = {
 
 export type CookingHistoryMaxAggregateOutputType = {
   id: string | null
+  userId: string | null
   recipeId: string | null
   recipeName: string | null
   date: Date | null
@@ -40,6 +42,7 @@ export type CookingHistoryMaxAggregateOutputType = {
 
 export type CookingHistoryCountAggregateOutputType = {
   id: number
+  userId: number
   recipeId: number
   recipeName: number
   date: number
@@ -49,6 +52,7 @@ export type CookingHistoryCountAggregateOutputType = {
 
 export type CookingHistoryMinAggregateInputType = {
   id?: true
+  userId?: true
   recipeId?: true
   recipeName?: true
   date?: true
@@ -56,6 +60,7 @@ export type CookingHistoryMinAggregateInputType = {
 
 export type CookingHistoryMaxAggregateInputType = {
   id?: true
+  userId?: true
   recipeId?: true
   recipeName?: true
   date?: true
@@ -63,6 +68,7 @@ export type CookingHistoryMaxAggregateInputType = {
 
 export type CookingHistoryCountAggregateInputType = {
   id?: true
+  userId?: true
   recipeId?: true
   recipeName?: true
   date?: true
@@ -143,7 +149,8 @@ export type CookingHistoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type CookingHistoryGroupByOutputType = {
   id: string
-  recipeId: string
+  userId: string
+  recipeId: string | null
   recipeName: string
   date: Date
   _count: CookingHistoryCountAggregateOutputType | null
@@ -171,16 +178,20 @@ export type CookingHistoryWhereInput = {
   OR?: Prisma.CookingHistoryWhereInput[]
   NOT?: Prisma.CookingHistoryWhereInput | Prisma.CookingHistoryWhereInput[]
   id?: Prisma.StringFilter<"CookingHistory"> | string
-  recipeId?: Prisma.StringFilter<"CookingHistory"> | string
+  userId?: Prisma.StringFilter<"CookingHistory"> | string
+  recipeId?: Prisma.StringNullableFilter<"CookingHistory"> | string | null
   recipeName?: Prisma.StringFilter<"CookingHistory"> | string
   date?: Prisma.DateTimeFilter<"CookingHistory"> | Date | string
+  user?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>
 }
 
 export type CookingHistoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  recipeId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  recipeId?: Prisma.SortOrderInput | Prisma.SortOrder
   recipeName?: Prisma.SortOrder
   date?: Prisma.SortOrder
+  user?: Prisma.ProfileOrderByWithRelationInput
 }
 
 export type CookingHistoryWhereUniqueInput = Prisma.AtLeast<{
@@ -188,14 +199,17 @@ export type CookingHistoryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CookingHistoryWhereInput | Prisma.CookingHistoryWhereInput[]
   OR?: Prisma.CookingHistoryWhereInput[]
   NOT?: Prisma.CookingHistoryWhereInput | Prisma.CookingHistoryWhereInput[]
-  recipeId?: Prisma.StringFilter<"CookingHistory"> | string
+  userId?: Prisma.StringFilter<"CookingHistory"> | string
+  recipeId?: Prisma.StringNullableFilter<"CookingHistory"> | string | null
   recipeName?: Prisma.StringFilter<"CookingHistory"> | string
   date?: Prisma.DateTimeFilter<"CookingHistory"> | Date | string
+  user?: Prisma.XOR<Prisma.ProfileScalarRelationFilter, Prisma.ProfileWhereInput>
 }, "id">
 
 export type CookingHistoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  recipeId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  recipeId?: Prisma.SortOrderInput | Prisma.SortOrder
   recipeName?: Prisma.SortOrder
   date?: Prisma.SortOrder
   _count?: Prisma.CookingHistoryCountOrderByAggregateInput
@@ -208,62 +222,80 @@ export type CookingHistoryScalarWhereWithAggregatesInput = {
   OR?: Prisma.CookingHistoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.CookingHistoryScalarWhereWithAggregatesInput | Prisma.CookingHistoryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"CookingHistory"> | string
-  recipeId?: Prisma.StringWithAggregatesFilter<"CookingHistory"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"CookingHistory"> | string
+  recipeId?: Prisma.StringNullableWithAggregatesFilter<"CookingHistory"> | string | null
   recipeName?: Prisma.StringWithAggregatesFilter<"CookingHistory"> | string
   date?: Prisma.DateTimeWithAggregatesFilter<"CookingHistory"> | Date | string
 }
 
 export type CookingHistoryCreateInput = {
   id?: string
-  recipeId: string
+  recipeId?: string | null
   recipeName: string
   date?: Date | string
+  user: Prisma.ProfileCreateNestedOneWithoutCookingHistoryInput
 }
 
 export type CookingHistoryUncheckedCreateInput = {
   id?: string
-  recipeId: string
+  userId: string
+  recipeId?: string | null
   recipeName: string
   date?: Date | string
 }
 
 export type CookingHistoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  recipeId?: Prisma.StringFieldUpdateOperationsInput | string
+  recipeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipeName?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.ProfileUpdateOneRequiredWithoutCookingHistoryNestedInput
 }
 
 export type CookingHistoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  recipeId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  recipeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipeName?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CookingHistoryCreateManyInput = {
   id?: string
-  recipeId: string
+  userId: string
+  recipeId?: string | null
   recipeName: string
   date?: Date | string
 }
 
 export type CookingHistoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  recipeId?: Prisma.StringFieldUpdateOperationsInput | string
+  recipeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipeName?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type CookingHistoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  recipeId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  recipeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recipeName?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type CookingHistoryListRelationFilter = {
+  every?: Prisma.CookingHistoryWhereInput
+  some?: Prisma.CookingHistoryWhereInput
+  none?: Prisma.CookingHistoryWhereInput
+}
+
+export type CookingHistoryOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type CookingHistoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   recipeId?: Prisma.SortOrder
   recipeName?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -271,6 +303,7 @@ export type CookingHistoryCountOrderByAggregateInput = {
 
 export type CookingHistoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   recipeId?: Prisma.SortOrder
   recipeName?: Prisma.SortOrder
   date?: Prisma.SortOrder
@@ -278,49 +311,190 @@ export type CookingHistoryMaxOrderByAggregateInput = {
 
 export type CookingHistoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   recipeId?: Prisma.SortOrder
   recipeName?: Prisma.SortOrder
   date?: Prisma.SortOrder
+}
+
+export type CookingHistoryCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CookingHistoryCreateWithoutUserInput, Prisma.CookingHistoryUncheckedCreateWithoutUserInput> | Prisma.CookingHistoryCreateWithoutUserInput[] | Prisma.CookingHistoryUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CookingHistoryCreateOrConnectWithoutUserInput | Prisma.CookingHistoryCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CookingHistoryCreateManyUserInputEnvelope
+  connect?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+}
+
+export type CookingHistoryUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.CookingHistoryCreateWithoutUserInput, Prisma.CookingHistoryUncheckedCreateWithoutUserInput> | Prisma.CookingHistoryCreateWithoutUserInput[] | Prisma.CookingHistoryUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CookingHistoryCreateOrConnectWithoutUserInput | Prisma.CookingHistoryCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.CookingHistoryCreateManyUserInputEnvelope
+  connect?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+}
+
+export type CookingHistoryUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CookingHistoryCreateWithoutUserInput, Prisma.CookingHistoryUncheckedCreateWithoutUserInput> | Prisma.CookingHistoryCreateWithoutUserInput[] | Prisma.CookingHistoryUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CookingHistoryCreateOrConnectWithoutUserInput | Prisma.CookingHistoryCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CookingHistoryUpsertWithWhereUniqueWithoutUserInput | Prisma.CookingHistoryUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CookingHistoryCreateManyUserInputEnvelope
+  set?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  disconnect?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  delete?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  connect?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  update?: Prisma.CookingHistoryUpdateWithWhereUniqueWithoutUserInput | Prisma.CookingHistoryUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CookingHistoryUpdateManyWithWhereWithoutUserInput | Prisma.CookingHistoryUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CookingHistoryScalarWhereInput | Prisma.CookingHistoryScalarWhereInput[]
+}
+
+export type CookingHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.CookingHistoryCreateWithoutUserInput, Prisma.CookingHistoryUncheckedCreateWithoutUserInput> | Prisma.CookingHistoryCreateWithoutUserInput[] | Prisma.CookingHistoryUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.CookingHistoryCreateOrConnectWithoutUserInput | Prisma.CookingHistoryCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.CookingHistoryUpsertWithWhereUniqueWithoutUserInput | Prisma.CookingHistoryUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.CookingHistoryCreateManyUserInputEnvelope
+  set?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  disconnect?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  delete?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  connect?: Prisma.CookingHistoryWhereUniqueInput | Prisma.CookingHistoryWhereUniqueInput[]
+  update?: Prisma.CookingHistoryUpdateWithWhereUniqueWithoutUserInput | Prisma.CookingHistoryUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.CookingHistoryUpdateManyWithWhereWithoutUserInput | Prisma.CookingHistoryUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.CookingHistoryScalarWhereInput | Prisma.CookingHistoryScalarWhereInput[]
+}
+
+export type CookingHistoryCreateWithoutUserInput = {
+  id?: string
+  recipeId?: string | null
+  recipeName: string
+  date?: Date | string
+}
+
+export type CookingHistoryUncheckedCreateWithoutUserInput = {
+  id?: string
+  recipeId?: string | null
+  recipeName: string
+  date?: Date | string
+}
+
+export type CookingHistoryCreateOrConnectWithoutUserInput = {
+  where: Prisma.CookingHistoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.CookingHistoryCreateWithoutUserInput, Prisma.CookingHistoryUncheckedCreateWithoutUserInput>
+}
+
+export type CookingHistoryCreateManyUserInputEnvelope = {
+  data: Prisma.CookingHistoryCreateManyUserInput | Prisma.CookingHistoryCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type CookingHistoryUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CookingHistoryWhereUniqueInput
+  update: Prisma.XOR<Prisma.CookingHistoryUpdateWithoutUserInput, Prisma.CookingHistoryUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.CookingHistoryCreateWithoutUserInput, Prisma.CookingHistoryUncheckedCreateWithoutUserInput>
+}
+
+export type CookingHistoryUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.CookingHistoryWhereUniqueInput
+  data: Prisma.XOR<Prisma.CookingHistoryUpdateWithoutUserInput, Prisma.CookingHistoryUncheckedUpdateWithoutUserInput>
+}
+
+export type CookingHistoryUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.CookingHistoryScalarWhereInput
+  data: Prisma.XOR<Prisma.CookingHistoryUpdateManyMutationInput, Prisma.CookingHistoryUncheckedUpdateManyWithoutUserInput>
+}
+
+export type CookingHistoryScalarWhereInput = {
+  AND?: Prisma.CookingHistoryScalarWhereInput | Prisma.CookingHistoryScalarWhereInput[]
+  OR?: Prisma.CookingHistoryScalarWhereInput[]
+  NOT?: Prisma.CookingHistoryScalarWhereInput | Prisma.CookingHistoryScalarWhereInput[]
+  id?: Prisma.StringFilter<"CookingHistory"> | string
+  userId?: Prisma.StringFilter<"CookingHistory"> | string
+  recipeId?: Prisma.StringNullableFilter<"CookingHistory"> | string | null
+  recipeName?: Prisma.StringFilter<"CookingHistory"> | string
+  date?: Prisma.DateTimeFilter<"CookingHistory"> | Date | string
+}
+
+export type CookingHistoryCreateManyUserInput = {
+  id?: string
+  recipeId?: string | null
+  recipeName: string
+  date?: Date | string
+}
+
+export type CookingHistoryUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  recipeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipeName?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CookingHistoryUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  recipeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipeName?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type CookingHistoryUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  recipeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipeName?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
 
 export type CookingHistorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   recipeId?: boolean
   recipeName?: boolean
   date?: boolean
+  user?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cookingHistory"]>
 
 export type CookingHistorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   recipeId?: boolean
   recipeName?: boolean
   date?: boolean
+  user?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cookingHistory"]>
 
 export type CookingHistorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  userId?: boolean
   recipeId?: boolean
   recipeName?: boolean
   date?: boolean
+  user?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["cookingHistory"]>
 
 export type CookingHistorySelectScalar = {
   id?: boolean
+  userId?: boolean
   recipeId?: boolean
   recipeName?: boolean
   date?: boolean
 }
 
-export type CookingHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "recipeId" | "recipeName" | "date", ExtArgs["result"]["cookingHistory"]>
+export type CookingHistoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "recipeId" | "recipeName" | "date", ExtArgs["result"]["cookingHistory"]>
+export type CookingHistoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
+}
+export type CookingHistoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
+}
+export type CookingHistoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.ProfileDefaultArgs<ExtArgs>
+}
 
 export type $CookingHistoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "CookingHistory"
-  objects: {}
+  objects: {
+    user: Prisma.$ProfilePayload<ExtArgs>
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    recipeId: string
+    userId: string
+    recipeId: string | null
     recipeName: string
     date: Date
   }, ExtArgs["result"]["cookingHistory"]>
@@ -717,6 +891,7 @@ readonly fields: CookingHistoryFieldRefs;
  */
 export interface Prisma__CookingHistoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.ProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__ProfileClient<runtime.Types.Result.GetResult<Prisma.$ProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -747,6 +922,7 @@ export interface Prisma__CookingHistoryClient<T, Null = never, ExtArgs extends r
  */
 export interface CookingHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"CookingHistory", 'String'>
+  readonly userId: Prisma.FieldRef<"CookingHistory", 'String'>
   readonly recipeId: Prisma.FieldRef<"CookingHistory", 'String'>
   readonly recipeName: Prisma.FieldRef<"CookingHistory", 'String'>
   readonly date: Prisma.FieldRef<"CookingHistory", 'DateTime'>
@@ -767,6 +943,10 @@ export type CookingHistoryFindUniqueArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
+  /**
    * Filter, which CookingHistory to fetch.
    */
   where: Prisma.CookingHistoryWhereUniqueInput
@@ -785,6 +965,10 @@ export type CookingHistoryFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Ex
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
+  /**
    * Filter, which CookingHistory to fetch.
    */
   where: Prisma.CookingHistoryWhereUniqueInput
@@ -802,6 +986,10 @@ export type CookingHistoryFindFirstArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the CookingHistory
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
   /**
    * Filter, which CookingHistory to fetch.
    */
@@ -851,6 +1039,10 @@ export type CookingHistoryFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Ext
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
+  /**
    * Filter, which CookingHistory to fetch.
    */
   where?: Prisma.CookingHistoryWhereInput
@@ -899,6 +1091,10 @@ export type CookingHistoryFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
+  /**
    * Filter, which CookingHistories to fetch.
    */
   where?: Prisma.CookingHistoryWhereInput
@@ -942,6 +1138,10 @@ export type CookingHistoryCreateArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
+  /**
    * The data needed to create a CookingHistory.
    */
   data: Prisma.XOR<Prisma.CookingHistoryCreateInput, Prisma.CookingHistoryUncheckedCreateInput>
@@ -975,6 +1175,10 @@ export type CookingHistoryCreateManyAndReturnArgs<ExtArgs extends runtime.Types.
    */
   data: Prisma.CookingHistoryCreateManyInput | Prisma.CookingHistoryCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -989,6 +1193,10 @@ export type CookingHistoryUpdateArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the CookingHistory
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
   /**
    * The data needed to update a CookingHistory.
    */
@@ -1041,6 +1249,10 @@ export type CookingHistoryUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.
    * Limit how many CookingHistories to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1055,6 +1267,10 @@ export type CookingHistoryUpsertArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the CookingHistory
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
   /**
    * The filter to search for the CookingHistory to update in case it exists.
    */
@@ -1081,6 +1297,10 @@ export type CookingHistoryDeleteArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the CookingHistory
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
   /**
    * Filter which CookingHistory to delete.
    */
@@ -1113,4 +1333,8 @@ export type CookingHistoryDefaultArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the CookingHistory
    */
   omit?: Prisma.CookingHistoryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CookingHistoryInclude<ExtArgs> | null
 }

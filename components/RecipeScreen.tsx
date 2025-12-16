@@ -103,6 +103,8 @@ export const RecipeScreen = ({
 
   // Delete state
   const [deleteRecipe, setDeleteRecipe] = useState<RecipeWithStatus | null>(null);
+  
+  const groceryNameMap = new Map(groceries.map(g => [g.id, g.name]));
 
   const handleAddToMealPlan = () => {
     if (selectedRecipe) {
@@ -120,9 +122,9 @@ export const RecipeScreen = ({
     }
   };
 
-  const toggleIngredient = (name: string) => {
+  const toggleIngredient = (id: string) => {
     setSelectedIngredients(prev =>
-      prev.includes(name) ? prev.filter(i => i !== name) : [...prev, name]
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
   };
 
@@ -225,18 +227,19 @@ export const RecipeScreen = ({
           )}
 
           <div className="flex flex-wrap gap-1.5 mb-3">
-            {recipe.ingredients.map(ing => {
-              const isMissing = recipe.missingIngredients.includes(ing);
+            {recipe.ingredients.map(ingId => {
+              const isMissing = recipe.missingIngredients.includes(ingId);
+              const ingName = groceryNameMap.get(ingId) ?? 'Unknown';
               return (
                 <Badge
-                  key={ing}
+                  key={ingId}
                   variant="secondary"
                   className={cn(
                     'text-xs',
                     isMissing && 'bg-status-not-ready/10 text-status-not-ready border-status-not-ready/20'
                   )}
                 >
-                  {isMissing && '⚠️ '}{ing}
+                  {isMissing && '⚠️ '}{ingName}
                 </Badge>
               );
             })}
@@ -344,7 +347,7 @@ export const RecipeScreen = ({
                           ? 'bg-primary text-primary-foreground'
                           : 'hover:bg-secondary'
                       )}
-                      onClick={() => toggleIngredient(g.name)}
+                      onClick={() => toggleIngredient(g.id)}
                     >
                       {g.name}
                     </Badge>

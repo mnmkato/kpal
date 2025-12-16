@@ -10,7 +10,6 @@ export async function Header() {
 
     const { data, error } = await supabase.auth.getClaims()
     const user = data?.claims
-    console.log(user)
     if (error || !user) {
         redirect('/auth')
     }
@@ -24,7 +23,7 @@ export async function Header() {
     return (
         <header className="flex justify-between items-center py-2 px-4 pt-4 max-w-lg mx-auto border-b border-border shadow-sm">
             <Link href="/">
-                <h1 className="text-2xl font-bold">KPal</h1>
+                <h1 className="text-2xl font-bold">Welcome, {user.email}</h1>
             </Link>
             {user ? (
                 <AuthHeader signOut={handleSignOut} />

@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.1.0",
   "engineVersion": "ab635e6b9d606fa5c8fb8b1a7f909c3c3c1c98ba",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel GroceryItem {\n  id        String   @id @default(cuid())\n  name      String\n  category  String\n  available Boolean  @default(false)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Recipe {\n  id          String     @id @default(cuid())\n  name        String\n  ingredients String // JSON string\n  favorite    Boolean    @default(false)\n  cookCount   Int        @default(0)\n  lastCooked  DateTime?\n  createdAt   DateTime   @default(now())\n  updatedAt   DateTime   @updatedAt\n  mealPlans   MealPlan[]\n}\n\nmodel MealPlan {\n  id        String   @id @default(cuid())\n  day       String\n  mealType  String\n  recipeId  String?\n  recipe    Recipe?  @relation(fields: [recipeId], references: [id])\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@unique([day, mealType])\n}\n\nmodel CookingHistory {\n  id         String   @id @default(cuid())\n  recipeId   String\n  recipeName String\n  date       DateTime @default(now())\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  schemas  = [\"public\"]\n}\n\nmodel Profile {\n  id        String  @id @default(uuid()) // same as auth.users.id\n  email     String?\n  fullName  String?\n  avatarUrl String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n\n  groceryItems   GroceryItem[]\n  recipes        Recipe[]\n  mealPlans      MealPlan[]\n  cookingHistory CookingHistory[]\n\n  @@schema(\"public\")\n}\n\nmodel GroceryItem {\n  id     String  @id @default(cuid())\n  userId String\n  user   Profile @relation(fields: [userId], references: [id])\n\n  name      String\n  category  String\n  available Boolean @default(false)\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  deletedAt DateTime?\n\n  @@unique([userId, name], name: \"userId_name\")\n  @@index([userId])\n  @@schema(\"public\")\n}\n\nmodel Recipe {\n  id     String  @id @default(cuid())\n  userId String\n  user   Profile @relation(fields: [userId], references: [id])\n\n  name        String\n  ingredients String[]\n  favorite    Boolean   @default(false)\n  cookCount   Int       @default(0)\n  lastCooked  DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  mealPlans MealPlan[]\n\n  @@index([userId])\n  @@schema(\"public\")\n}\n\nmodel MealPlan {\n  id     String  @id @default(cuid())\n  userId String\n  user   Profile @relation(fields: [userId], references: [id])\n\n  day      String\n  mealType String\n\n  recipeId String?\n  recipe   Recipe? @relation(fields: [recipeId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@unique([userId, day, mealType], name: \"day_mealType_user\")\n  @@index([userId])\n  @@schema(\"public\")\n}\n\nmodel CookingHistory {\n  id     String  @id @default(cuid())\n  userId String\n  user   Profile @relation(fields: [userId], references: [id])\n\n  recipeId   String?\n  recipeName String\n\n  date DateTime @default(now())\n\n  @@index([userId])\n  @@schema(\"public\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"GroceryItem\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"available\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Recipe\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ingredients\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"favorite\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"cookCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastCooked\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"mealPlans\",\"kind\":\"object\",\"type\":\"MealPlan\",\"relationName\":\"MealPlanToRecipe\"}],\"dbName\":null},\"MealPlan\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"day\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mealType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipeId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipe\",\"kind\":\"object\",\"type\":\"Recipe\",\"relationName\":\"MealPlanToRecipe\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"CookingHistory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipeId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipeName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Profile\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fullName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatarUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"groceryItems\",\"kind\":\"object\",\"type\":\"GroceryItem\",\"relationName\":\"GroceryItemToProfile\"},{\"name\":\"recipes\",\"kind\":\"object\",\"type\":\"Recipe\",\"relationName\":\"ProfileToRecipe\"},{\"name\":\"mealPlans\",\"kind\":\"object\",\"type\":\"MealPlan\",\"relationName\":\"MealPlanToProfile\"},{\"name\":\"cookingHistory\",\"kind\":\"object\",\"type\":\"CookingHistory\",\"relationName\":\"CookingHistoryToProfile\"}],\"dbName\":null},\"GroceryItem\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Profile\",\"relationName\":\"GroceryItemToProfile\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"available\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"deletedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Recipe\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Profile\",\"relationName\":\"ProfileToRecipe\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ingredients\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"favorite\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"cookCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastCooked\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"mealPlans\",\"kind\":\"object\",\"type\":\"MealPlan\",\"relationName\":\"MealPlanToRecipe\"}],\"dbName\":null},\"MealPlan\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Profile\",\"relationName\":\"MealPlanToProfile\"},{\"name\":\"day\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"mealType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipeId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipe\",\"kind\":\"object\",\"type\":\"Recipe\",\"relationName\":\"MealPlanToRecipe\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"CookingHistory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Profile\",\"relationName\":\"CookingHistoryToProfile\"},{\"name\":\"recipeId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipeName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more GroceryItems
-   * const groceryItems = await prisma.groceryItem.findMany()
+   * // Fetch zero or more Profiles
+   * const profiles = await prisma.profile.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more GroceryItems
- * const groceryItems = await prisma.groceryItem.findMany()
+ * // Fetch zero or more Profiles
+ * const profiles = await prisma.profile.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -175,6 +175,16 @@ export interface PrismaClient<
   }>>
 
       /**
+   * `prisma.profile`: Exposes CRUD operations for the **Profile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Profiles
+    * const profiles = await prisma.profile.findMany()
+    * ```
+    */
+  get profile(): Prisma.ProfileDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
    * `prisma.groceryItem`: Exposes CRUD operations for the **GroceryItem** model.
     * Example usage:
     * ```ts

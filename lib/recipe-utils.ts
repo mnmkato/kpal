@@ -1,14 +1,22 @@
 import { Recipe, GroceryItem, RecipeWithStatus } from '@/types';
 
+export function resolveIngredientNames(
+  ingredientIds: string[],
+  groceries: GroceryItem[]
+) {
+  const map = new Map(groceries.map(g => [g.id, g.name]));
+  return ingredientIds.map(id => map.get(id) ?? 'Unknown');
+}
+
 export function calculateRecipeStatus(recipes: Recipe[], groceries: GroceryItem[]): RecipeWithStatus[] {
     const availableIngredients = new Set(
-        groceries.filter(g => g.available).map(g => g.name)
+        groceries.filter(g => g.available).map(g => g.id)
     );
-
     return recipes.map(recipe => {
         const missingIngredients = recipe.ingredients.filter(
-            ing => !availableIngredients.has(ing)
+            ingId => !availableIngredients.has(ingId)
         );
+        
         const missingCount = missingIngredients.length;
 
         let status: RecipeWithStatus['status'];

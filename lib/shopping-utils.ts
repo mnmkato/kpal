@@ -1,37 +1,36 @@
 import { MealPlan, Recipe, GroceryItem, ShoppingItem } from '@/types';
 
 export function calculateShoppingList(mealPlan: MealPlan, recipes: Recipe[], groceries: GroceryItem[]): ShoppingItem[] {
-    const neededIngredients = new Map<string, Set<string>>();
+
     const availableIngredients = new Set(
-        groceries.filter(g => g.available).map(g => g.name)
+        groceries.filter(g => g.available).map(g => g.id)
     );
+    const neededIngredients = new Map<string, Set<string>>();
 
     Object.values(mealPlan).forEach(dayMeals => {
         Object.values(dayMeals).forEach(recipeId => {
-            if (recipeId) {
-                const recipe = recipes.find(r => r.id === recipeId);
-                if (recipe) {
-                    recipe.ingredients.forEach(ing => {
-                        if (!availableIngredients.has(ing)) {
-                            if (!neededIngredients.has(ing)) {
-                                neededIngredients.set(ing, new Set());
-                            }
-                            neededIngredients.get(ing)!.add(recipe.name);
-                        }
-                    });
+            if (!recipeId) return;
+            const recipe = recipes.find(r => r.id === recipeId);
+            if (!recipe) return;
+            recipe.ingredients.forEach(groceryId => {
+                if (!availableIngredients.has(groceryId)) {
+                    if (!neededIngredients.has(groceryId)) {
+                        neededIngredients.set(groceryId, new Set());
+                    }
+                    neededIngredients.get(groceryId)!.add(recipe.name);
                 }
-            }
+            });
         });
     });
 
-    return Array.from(neededIngredients.entries()).map(([name, recipes]) => {
-        const grocery = groceries.find(g => g.name === name);
-        return {
-            id: `shop-${name}`,
-            name,
-            neededFor: Array.from(recipes),
-            purchased: false,
-            category: grocery?.category || 'Other',
-        };
-    });
+return Array.from(neededIngredients.entries()).map(([id, recipes]) => {
+    const grocery = groceries.find(g => g.id === id);
+    return {
+        id,
+        name: grocery?.name ?? 'Unknown',
+        category: grocery?.category ?? 'Other',
+        neededFor: [...recipes],
+        purchased: false,
+    };
+});
 }

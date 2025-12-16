@@ -1,3 +1,4 @@
+/*
 import { PrismaClient, Prisma } from './generated/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { initialGroceries, initialRecipes } from '../data/initialData';
@@ -52,3 +53,4 @@ main()
     .finally(async () => {
         await prisma.$disconnect();
     });
+*/

@@ -268,13 +268,14 @@ export const GroceryScreen = ({ groceries, recipes, onToggle, onAdd, onUpdate, o
                             <Pencil className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem
+                          {/* <DropdownMenuItem
                             onClick={() => setDeleteItem(item)}
                             className="text-destructive focus:text-destructive"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
                             Delete
                           </DropdownMenuItem>
+                          */}
                         </DropdownMenuContent>
                       </DropdownMenu>
                       </div>

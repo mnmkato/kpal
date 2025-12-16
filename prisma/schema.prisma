@@ -5,44 +5,97 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  schemas  = ["public"]
+}
+
+model Profile {
+  id        String   @id @default(uuid()) // same as auth.users.id
+  email     String?
+  fullName  String?
+  avatarUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  groceryItems   GroceryItem[]
+  recipes        Recipe[]
+  mealPlans      MealPlan[]
+  cookingHistory CookingHistory[]
+
+  @@schema("public")
 }
 
 model GroceryItem {
   id        String   @id @default(cuid())
+  userId    String
+  user      Profile  @relation(fields: [userId], references: [id])
+
   name      String
   category  String
   available Boolean  @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@index([userId])
+  @@unique([userId, name], name: "userId_name")
+
+  @@schema("public")
 }
 
 model Recipe {
-  id           String   @id @default(cuid())
-  name         String
-  ingredients  String   // JSON string
-  favorite     Boolean  @default(false)
-  cookCount    Int      @default(0)
-  lastCooked   DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  mealPlans    MealPlan[]
+  id          String   @id @default(cuid())
+  userId      String
+  user        Profile  @relation(fields: [userId], references: [id])
+
+  name        String
+  ingredients String[]
+  favorite    Boolean  @default(false)
+  cookCount   Int      @default(0)
+  lastCooked  DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  mealPlans   MealPlan[]
+
+  @@index([userId])
+  @@schema("public")
 }
+
 
 model MealPlan {
   id        String   @id @default(cuid())
+  userId    String
+  user      Profile  @relation(fields: [userId], references: [id])
+
   day       String
   mealType  String
+
   recipeId  String?
   recipe    Recipe?  @relation(fields: [recipeId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([day, mealType])
+  @@unique([userId, day, mealType], name: "day_mealType_user")
+  @@index([userId])
+  @@schema("public")
 }
+
 
 model CookingHistory {
   id         String   @id @default(cuid())
-  recipeId   String
+  userId     String
+  user       Profile  @relation(fields: [userId], references: [id])
+
+  recipeId   String?
   recipeName String
+
   date       DateTime @default(now())
+
+  @@index([userId])
+
+  @@schema("public")
 }

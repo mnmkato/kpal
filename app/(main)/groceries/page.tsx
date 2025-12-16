@@ -29,7 +29,7 @@ export default async function GroceriesPage() {
         <div className="pb-20 px-4 max-w-lg mx-auto pt-4">
             <GroceryScreen
                 groceries={groceries as any}
-                recipes={recipesWithStatus}
+                recipes={recipesWithStatus.recipes}
                 onToggle={handleToggle}
                 onAdd={handleAdd}
                 onUpdate={handleUpdate}
