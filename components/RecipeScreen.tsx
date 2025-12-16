@@ -89,7 +89,6 @@ export const RecipeScreen = ({
   onUpdateRecipe,
   onDeleteRecipe,
 }: RecipeScreenProps) => {
-  const [selectedRecipe, setSelectedRecipe] = useState<RecipeWithStatus | null>(null);
   const [selectedDay, setSelectedDay] = useState<DayOfWeek>('Monday');
   const [selectedMeal, setSelectedMeal] = useState<MealType>('Dinner');
   const [isAdding, setIsAdding] = useState(false);
@@ -110,9 +109,9 @@ export const RecipeScreen = ({
   const groceryNameMap = new Map(groceries.map(g => [g.id, g.name]));
 
   const handleAddToMealPlan = () => {
-    if (selectedRecipe) {
-      onAddToMealPlan(selectedRecipe.id, selectedDay, selectedMeal);
-      setSelectedRecipe(null);
+    if (mealDialogRecipe) {
+      onAddToMealPlan(mealDialogRecipe.id, selectedDay, selectedMeal);
+      setMealDialogRecipe(null);
     }
   };
 
