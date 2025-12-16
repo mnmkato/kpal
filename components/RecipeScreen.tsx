@@ -343,7 +343,7 @@ export const RecipeScreen = ({
                       variant={selectedIngredients.includes(g.id) ? 'default' : 'outline'}
                       className={cn(
                         'cursor-pointer transition-all',
-                        selectedIngredients.includes(g.name)
+                        selectedIngredients.includes(g.id)
                           ? 'bg-emerald-500 text-primary-foreground'
                           : 'hover:bg-emerald-500'
                       )}
@@ -446,14 +446,14 @@ export const RecipeScreen = ({
                 {groceries.map(g => (
                   <Badge
                     key={g.id}
-                    variant={editIngredients.includes(g.name) ? 'default' : 'outline'}
+                    variant={editIngredients.includes(g.id) ? 'default' : 'outline'}
                     className={cn(
                       'cursor-pointer transition-all',
-                      editIngredients.includes(g.name)
-                        ? 'bg-primary text-primary-foreground'
-                        : 'hover:bg-secondary'
+                      editIngredients.includes(g.id)
+                        ? 'bg-emerald-500 text-primary-foreground'
+                        : 'hover:bg-emerald-500'
                     )}
-                    onClick={() => toggleEditIngredient(g.name)}
+                    onClick={() => toggleEditIngredient(g.id)}
                   >
                     {g.name}
                   </Badge>
